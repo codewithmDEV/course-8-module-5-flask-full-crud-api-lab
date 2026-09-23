@@ -16,9 +16,14 @@ events = [
     Event(1, "Tech Meetup"),
     Event(2, "Python Workshop")
 ]
+@app.route("/")
+def welcome():
+    return jsonify({"message": "Welcome to the Event Management API!"})
 
-# TODO: Task 1 - Define the Problem
-# Create a new event from JSON input
+@app.route("/events", methods=["GET"])
+def get_events():
+    return jsonify([event.to_dict() for event in events])
+
 @app.route("/events", methods=["POST"])
 def create_event():
     data = request.get_json()
@@ -47,7 +52,7 @@ def delete_event(event_id):
         return jsonify({"error": "Event not found"}), 404
 
     events[:] = [event for event in events if event.id != event_id]
-    return jsonify({"message": "Event deleted successfully"}), 200
+    return "", 204
 
 if __name__ == "__main__":
     app.run(debug=True)
